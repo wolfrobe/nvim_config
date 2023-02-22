@@ -1,6 +1,6 @@
 
 ----------------------------------
--- file:  ~/.config/nvim/init.lua
+-- файл:  ~/.config/nvim/init.lua
 -- основан на
 -- https://github.com/Tony-Sol/.config/blob/master/nvim/lua/configs.lua 
 ----------------------------------
@@ -56,15 +56,6 @@ g.netrw_liststyle = 0
 g.netrw_browse_split = 4
 g.netrw_altv = 1
 
--- клавиши для telescope
-local opts = { noremap = true, silent = true }
-keymap.set('n', '<c-p>', require('telescope.builtin').find_files, opts)
-keymap.set('n', '<Space>fg', require('telescope.builtin').live_grep, opts)
-keymap.set('n', '<Space><Space>', require('telescope.builtin').oldfiles, opts)
--- поиск через ripgrep с аргументами?
-keymap.set('n', '<Space>fs',
-	require("telescope").extensions.live_grep_args.live_grep_args, opts)
-
 -- подсветка выделенного блока
 cmd[[au TextYankPost * silent! lua vim.highlight.on_yank()]]
 -- включаем менеджмент плагинами
@@ -75,20 +66,20 @@ require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim', opt = true }
   -- плагины добавлять сюда:
 
-  -- для темы  zenbones
-  use 'rktjmp/lush.nvim'
-	-- тема для neovim zenvones/neobones
-  use {
-	  "mcchrish/zenbones.nvim",
-	  requires = "rktjmp/lush.nvim",
-	  config = function ()
-		  vim.cmd 'set termguicolors'
-		  vim.cmd 'set background=dark'  -- or light 
-		  vim.cmd 'colorscheme neobones' end
-  }
-
   -- Даже если включена русская раскладка команды vim будут работать
   use 'powerman/vim-plugin-ruscmd'
+
+	-- автоскобки
+	use {
+		"windwp/nvim-autopairs",
+		config = function() require("nvim-autopairs").setup {} end
+	}
+
+  -- Комментирует по gc все, вне зависимости от языка
+  use {
+	  'numToStr/Comment.nvim',
+	  config = function() require('Comment').setup() end
+  }
 
   use 'nvim-lua/plenary.nvim'
 
@@ -112,12 +103,6 @@ require('packer').startup(function(use)
 		}
 	}
 
-  -- Комментирует по gc все, вне зависимости от языка
-  use {
-	  'numToStr/Comment.nvim',
-	  config = function() require('Comment').setup() end
-  }
-
 	--  для LSP
 	use {
 		'williamboman/mason.nvim',
@@ -134,6 +119,11 @@ require('packer').startup(function(use)
 			},
 		},
 	}
+
+	--  для LSP
+	use 'neovim/nvim-lspconfig'
+	use 'hrsh7th/nvim-cmp'
+	use 'hrsh7th/cmp-nvim-lsp'
 
 	-- Configurations for Nvim LSP
 	use {
@@ -164,9 +154,6 @@ require('packer').startup(function(use)
 		'nvim-telescope/telescope-file-browser.nvim',
 		'nvim-telescope/telescope-live-grep-args.nvim',
 	}
-
-	local telescope = require("telescope")
-	local lga_actions = require("telescope-live-grep-args.actions")
 	use {
 		'nvim-telescope/telescope.nvim', tag = '0.1.1',
 		requires = {
@@ -175,34 +162,48 @@ require('packer').startup(function(use)
 			'nvim-telescope/telescope-live-grep-args.nvim',
 		},
 		require('telescope').setup {
-			defaults = {
-				layout_strategy = 'vertical' ,
-				--				mappings = {
-				--					n = { ['<Space><Space>'] = require('telescope.builtin').find_files },
-				--				},
-			},
+			defaults = { layout_strategy = 'vertical' , },
 			extensions = {
 				file_browser = { hijack_netrw = false, },
-				live_grep_args = {
-					auto_quoting = true,
-					mappings = {
-						i = {
-							["<c-k>"] = lga_actions.quote_prompt(),
-							["<c-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
-						},
-					},
+				live_grep_args = { auto_quoting = true, },
 				},
 			},
 
 			require('telescope').load_extension('file_browser'),
 			require('telescope').load_extension('live_grep_args'),
 		}
-	}
 
-	-- автоскобки
-	use {
-		"windwp/nvim-autopairs",
-		config = function() require("nvim-autopairs").setup {} end
-	}
+	-- для темы  zenbones
+	use 'rktjmp/lush.nvim'
+
+	-- тема для neovim zenvones/neobones
+  use {
+	  "mcchrish/zenbones.nvim",
+	  requires = "rktjmp/lush.nvim",
+	  config = function ()
+		  vim.cmd 'set termguicolors'
+		  vim.cmd 'set background=dark'  -- or light 
+		  vim.cmd 'colorscheme neobones' end
+  }
 
 end)
+
+-- LspConfig from https://github.com/VonHeikemen/lsp-zero.nvim
+local lsp = require('lsp-zero').preset({
+  name = 'minimal',
+  set_lsp_keymaps = true,
+  manage_nvim_cmp = true,
+  suggest_lsp_servers = false,
+})
+-- (Optional) Configure lua language server for neovim
+lsp.nvim_workspace()
+lsp.setup()
+
+-- клавиши для telescope
+local opts = { noremap = true, silent = true }
+keymap.set('n', '<c-p>', require('telescope.builtin').find_files, opts)
+keymap.set('n', '<Space>fg', require('telescope.builtin').live_grep, opts)
+keymap.set('n', '<Space><Space>', require('telescope.builtin').oldfiles, opts)
+-- поиск через ripgrep с аргументами?
+keymap.set('n', '<Space>fs',
+	require("telescope").extensions.live_grep_args.live_grep_args, opts)

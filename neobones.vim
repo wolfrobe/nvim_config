@@ -1,13 +1,10 @@
-"if exists('g:colors_name')
-"    highlight clear
-"endif
+
+------------------------------------------------------------------------------
+-- файл для цветовой схемы zenbones/neobones
+~/.local/share/nvim/site/pack/packer/start/zenbones.nvim/colors/neobones.vim
+------------------------------------------------------------------------------
 
 let g:colors_name = 'neobones'
-
-"if has('nvim') && !bones#_compat(g:colors_name)
-"    lua require("zenbones.util").apply_colorscheme()
-"    finish
-"endif
 
 let s:italics = (&t_ZH != '' && &t_ZH != '[7m') || has('gui_running') || has('nvim')
 
