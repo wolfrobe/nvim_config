@@ -1,10 +1,13 @@
-
-------------------------------------------------------------------------------
--- файл для цветовой схемы zenbones/neobones
-~/.local/share/nvim/site/pack/packer/start/zenbones.nvim/colors/neobones.vim
-------------------------------------------------------------------------------
+"if exists('g:colors_name')
+"    highlight clear
+"endif
 
 let g:colors_name = 'neobones'
+
+"if has('nvim') && !bones#_compat(g:colors_name)
+"    lua require("zenbones.util").apply_colorscheme()
+"    finish
+"endif
 
 let s:italics = (&t_ZH != '' && &t_ZH != '[7m') || has('gui_running') || has('nvim')
 
@@ -171,7 +174,7 @@ if &background ==# 'dark'
     highlight TelescopeMatching guifg=#B279A7 guibg=NONE guisp=NONE gui=bold cterm=bold
     highlight TelescopeSelectionCaret guifg=#DE6E7C guibg=#152128 guisp=NONE gui=NONE cterm=NONE
     highlight Title guifg=#C6D5CF guibg=NONE guisp=NONE gui=bold cterm=bold
-    highlight Todo guifg=NONE guibg=NONE guisp=NONE gui=bold cterm=bold
+    highlight Todo guifg=#7BA9C5 guibg=NONE guisp=NONE gui=bold cterm=bold
     highlight Type guifg=#FFFFFF guibg=NONE guisp=NONE gui=NONE cterm=NONE
     highlight! link helpSpecial Type
     highlight! link markdownCode Type

@@ -1,6 +1,6 @@
 
 ----------------------------------
--- файл:  ~/.config/nvim/init.lua
+-- file:  ~/.config/nvim/init.lua
 -- основан на
 -- https://github.com/Tony-Sol/.config/blob/master/nvim/lua/configs.lua 
 ----------------------------------
@@ -58,6 +58,7 @@ g.netrw_altv = 1
 
 -- подсветка выделенного блока
 cmd[[au TextYankPost * silent! lua vim.highlight.on_yank()]]
+
 -- включаем менеджмент плагинами
 cmd('packadd packer.nvim')
 
@@ -198,6 +199,16 @@ local lsp = require('lsp-zero').preset({
 -- (Optional) Configure lua language server for neovim
 lsp.nvim_workspace()
 lsp.setup()
+
+-- вывод диагностических сообщений от LSP
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  update_in_insert = false,
+  underline = true,
+  severity_sort = false,
+  float = true,
+})
 
 -- клавиши для telescope
 local opts = { noremap = true, silent = true }
